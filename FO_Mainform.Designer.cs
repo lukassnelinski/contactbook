@@ -114,6 +114,7 @@ namespace Contactbook
             this.BT_Delete.TabIndex = 3;
             this.BT_Delete.Text = "&Delete";
             this.BT_Delete.UseVisualStyleBackColor = true;
+            this.BT_Delete.Click += new System.EventHandler(this.BT_Delete_Click);
             // 
             // BT_Update
             // 
@@ -123,6 +124,7 @@ namespace Contactbook
             this.BT_Update.TabIndex = 2;
             this.BT_Update.Text = "&Update";
             this.BT_Update.UseVisualStyleBackColor = true;
+            this.BT_Update.Click += new System.EventHandler(this.BT_Update_Click);
             // 
             // LB_Notes
             // 
@@ -332,6 +334,7 @@ namespace Contactbook
             this.DG_Grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DG_Grid.Size = new System.Drawing.Size(504, 446);
             this.DG_Grid.TabIndex = 4;
+            this.DG_Grid.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.DG_Grid_RowEnter);
             // 
             // CL_ID
             // 

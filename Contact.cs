@@ -29,14 +29,14 @@ namespace Contactbook
             SQL.InsertAddress(person);
         }
 
-        public static void UpdateContact()
+        public static void UpdateContact(Person person)
         {
-
+            SQL.UpdateAddress(person);
         }
 
-        public static void DeleteContact()
+        public static void DeleteContact(Person person)
         {
-
+            SQL.DeleteAddress(person);
         }
     }
 }
