@@ -10,14 +10,12 @@ namespace Contactbook
     {
         public string Folder { get; private set; }
         public string Database { get; private set; }
-        public string FullDatabasePath { get; private set; }
 
         private SQLiteConnection Con;
         public SQLite()
         {
             Folder = "./database/";
-            Database = "contactbook.db3";
-            FullDatabasePath = Folder + Database;
+            Database = Folder + "contactbook.db3";
             CreateDatabase();
         }
 
@@ -29,7 +27,7 @@ namespace Contactbook
                 CreateDatabaseFile();
                 
             }
-            else if (Directory.Exists(Folder) && !File.Exists(FullDatabasePath))
+            else if (Directory.Exists(Folder) && !File.Exists(Database))
             {
                 CreateDatabaseFile();
             }
@@ -37,7 +35,7 @@ namespace Contactbook
 
         private void CreateDatabaseFile()
         {
-            File.Create(FullDatabasePath).Close();
+            File.Create(Database).Close();
             CreateTableAddresses();
         }
 
@@ -45,7 +43,7 @@ namespace Contactbook
         {
             SQLiteConnectionStringBuilder mBuilder = new SQLiteConnectionStringBuilder()
             {
-                DataSource = FullDatabasePath,
+                DataSource = Database,
                 Version = 3
             };
             Con = new SQLiteConnection(mBuilder.ToString());
@@ -141,17 +139,18 @@ namespace Contactbook
                 cmd = Con.CreateCommand();
                 cmd.CommandText = "INSERT INTO addresses (salutation, forename, surname, street, zip, " +
                                     "city, country, phone, email, notes, create_date, change_date) VALUES " +
-                                    "(@v1, @v2, @v3, @v4, @v5, @v6, @v7, @v8, @v9, @v10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);";
-                cmd.Parameters.AddWithValue("@v1", person.Salutation);
-                cmd.Parameters.AddWithValue("@v2", person.Forename);
-                cmd.Parameters.AddWithValue("@v3", person.Surname);
-                cmd.Parameters.AddWithValue("@v4", person.Street);
-                cmd.Parameters.AddWithValue("@v5", person.ZIP);
-                cmd.Parameters.AddWithValue("@v6", person.City);
-                cmd.Parameters.AddWithValue("@v7", person.Country);
-                cmd.Parameters.AddWithValue("@v8", person.Phone);
-                cmd.Parameters.AddWithValue("@v9", person.EMail);
-                cmd.Parameters.AddWithValue("@v10", person.Notes);
+                                    "(@Salutation, @Forename, @Surname, @Street, @ZIP, @City, @Country, " +
+                                    "@Phone, @EMail, @Notes, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);";
+                cmd.Parameters.AddWithValue("@Salutation", person.Salutation);
+                cmd.Parameters.AddWithValue("@Forename", person.Forename);
+                cmd.Parameters.AddWithValue("@Surname", person.Surname);
+                cmd.Parameters.AddWithValue("@Street", person.Street);
+                cmd.Parameters.AddWithValue("@ZIP", person.ZIP);
+                cmd.Parameters.AddWithValue("@City", person.City);
+                cmd.Parameters.AddWithValue("@Country", person.Country);
+                cmd.Parameters.AddWithValue("@Phone", person.Phone);
+                cmd.Parameters.AddWithValue("@EMail", person.EMail);
+                cmd.Parameters.AddWithValue("@Notes", person.Notes);
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
             }
