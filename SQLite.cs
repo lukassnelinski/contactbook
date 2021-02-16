@@ -58,7 +58,7 @@ namespace Contactbook
             }
             catch (Exception e)
             {
-                ErrorHandler(e);
+                ExceptionHandler(e);
             }
         }
 
@@ -71,11 +71,11 @@ namespace Contactbook
             }
             catch (Exception e)
             {
-                ErrorHandler(e);
+                ExceptionHandler(e);
             }
         }
 
-        private void ErrorHandler(Exception exception)
+        private void ExceptionHandler(Exception exception)
         {
             MessageBox.Show(exception.Message, "SQLite", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -120,7 +120,7 @@ namespace Contactbook
             }
             catch (Exception e)
             {
-                ErrorHandler(e);
+                ExceptionHandler(e);
             }
             finally
             {
@@ -153,10 +153,11 @@ namespace Contactbook
                 cmd.Parameters.AddWithValue("@Notes", person.Notes);
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
             }
             catch (Exception e)
             {
-                ErrorHandler(e);
+                ExceptionHandler(e);
             }
             finally
             {
@@ -164,14 +165,65 @@ namespace Contactbook
             }
         }
 
-        public void UpdateAddress()
+        public void UpdateAddress(Person person)
         {
+            SQLiteCommand cmd;
 
+            try
+            {
+                OpenDatabaseConnection();
+                cmd = Con.CreateCommand();
+                cmd.CommandText = "UPDATE addresses SET salutation = @Salutation, forename = @Forename, " +
+                                    "surname = @Surname, street = @Street, zip = @ZIP, city = @City, " +
+                                    "country = @Country, phone = @Phone, email = @EMail, notes = @Notes, " +
+                                    "change_date = CURRENT_TIMESTAMP WHERE id = @ID;";
+                cmd.Parameters.AddWithValue("@Salutation", person.Salutation);
+                cmd.Parameters.AddWithValue("@Forename", person.Forename);
+                cmd.Parameters.AddWithValue("@Surname", person.Surname);
+                cmd.Parameters.AddWithValue("@Street", person.Street);
+                cmd.Parameters.AddWithValue("@ZIP", person.ZIP);
+                cmd.Parameters.AddWithValue("@City", person.City);
+                cmd.Parameters.AddWithValue("@Country", person.Country);
+                cmd.Parameters.AddWithValue("@Phone", person.Phone);
+                cmd.Parameters.AddWithValue("@EMail", person.EMail);
+                cmd.Parameters.AddWithValue("@Notes", person.Notes);
+                cmd.Parameters.AddWithValue("@ID", person.ID);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler(e);
+            }
+            finally
+            {
+                CloseDatabaseConnection();
+            }
         }
 
-        public void DeleteAddress(int id)
+        public void DeleteAddress(Person person)
         {
+            SQLiteCommand cmd;
 
+            try
+            {
+                OpenDatabaseConnection();
+                cmd = Con.CreateCommand();
+                cmd.CommandText = "DELETE FROM addresses WHERE id = @ID;";
+                cmd.Parameters.AddWithValue("@ID", person.ID);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+            catch (Exception e)
+            {
+                ExceptionHandler(e);
+            }
+            finally
+            {
+                CloseDatabaseConnection();
+            }
         }
     }
 }
